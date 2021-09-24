@@ -52,9 +52,10 @@ def win4(g):
     name = []
     for i in g.gamers:
         name.append([i.name])
+    name.append('')
     for i in range(g.num_dice_in_season):
         arr.append([
-                    sg.Combo(name, default_value='1', key=f'{i}c'), 
+                    sg.Combo(name, default_value='', key=f'{i}c'), 
                     sg.Image(g.dices[i][0], key=i), 
                     sg.Button('Перебросить', key=f'{i}b')
                     ])
@@ -66,12 +67,15 @@ def win4(g):
         if event in (None, 'Exit', 'Cancel'):
             break
         if event == '_ROLL_':
-            arr.clear()
             g.roll_dices()
-            for i in range(g.num_dice_in_season):
+
+            for i in range(len(arr)):
+                i[1].Update()
+
+            """for i in range(g.num_dice_in_season):
                 arr.append([sg.Image(g.dices[i][0], key=i)])
             for j in range(g.num_dice_in_season):
-                w1[j].update(filename=g.dices[j][0])
+                w1[j].update(filename=g.dices[j][0])"""
         if event in ev:
             g.roll_dices()
             j = int(event[:1])
