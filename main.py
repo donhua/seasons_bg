@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from os import name
+from tkinter import image_names
 import PySimpleGUI as sg 
 from Game import Game
 #from Iseasons import Iseasons
@@ -43,6 +44,17 @@ def win3(names_gamers):
         s += i.name + '\n'
     sg.popup(f'Сядьте в следующем порядке:\n{s}И начинайте спокойно играть.')
 
+def winroll(g, arr, v, w1, name):
+    g.roll_dices()
+    for i in range(len(arr)):
+        if v[f'{i}c'] == '':
+            tt=g.dices[i][1]
+            g.cal.time(tt)
+        arr[i][1].Update(filename=g.dices[i][0])
+        w1[f'{i}c'].update(values=name)
+    w1['data'].update(f'{g.cal.get_year()} год {g.id_season_to_season()}')
+    
+
 def win4(g):
     """Косячный недоделанный метод"""
     text_data = f'{g.cal.get_year()} год {g.id_season_to_season()}'
@@ -60,22 +72,14 @@ def win4(g):
                     sg.Button('Перебросить', key=f'{i}b')
                     ])
         ev.append(f'{i}b')
-    lauer1 = [[sg.Text(text_data)], [arr], [sg.Button('Бросок', key='_ROLL_')]]
+    lauer1 = [[sg.Text(text_data, key='data')], [arr], [sg.Button('Бросок', key='_ROLL_')]]
     w1 = sg.Window('Сезоны', lauer1)
     while True:
         event, values = w1.read()
         if event in (None, 'Exit', 'Cancel'):
             break
         if event == '_ROLL_':
-            g.roll_dices()
-
-            for i in range(len(arr)):
-                i[1].Update()
-
-            """for i in range(g.num_dice_in_season):
-                arr.append([sg.Image(g.dices[i][0], key=i)])
-            for j in range(g.num_dice_in_season):
-                w1[j].update(filename=g.dices[j][0])"""
+            winroll(g, arr, values, w1, name)
         if event in ev:
             g.roll_dices()
             j = int(event[:1])
