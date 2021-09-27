@@ -1,4 +1,5 @@
 class S_Calendar:
+    """Больше не используется. Удалить."""
 
     def __init__(self, nam_day: int = 1):
         self.day = nam_day
