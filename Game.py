@@ -45,8 +45,7 @@ class Game:
 
     def text_time(self):
         """Время. Возвращает дату игры в текстовом формате"""
-        text = f'Идет {self.get_day_in_periodr(12)} год, {self.get_day_in_period(3)} \
-            месяц {self.name_season[self.get_id_season()]}'
+        text = f'Идет {self.get_year()} год, {self.get_day_in_period(3)} месяц {self.name_season[self.get_id_season()]}'
         return text
 
     def time_end(self):

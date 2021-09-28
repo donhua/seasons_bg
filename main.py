@@ -82,6 +82,9 @@ def win4(g):
         if event in (None, 'Exit', 'Cancel'):
             break
         if event == '_ROLL_':
+            if g.time_end() == True:
+                sg.popup('Закончился третий год. Конец игры.')
+                break
             #winroll(g, arr, values, w1, name)
             for i in range(len(arr)):
                 if values[f'{i}c'] == '':
