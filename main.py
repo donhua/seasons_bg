@@ -1,14 +1,25 @@
 # -*- coding: utf-8 -*-
 from os import name
-from tkinter import image_names
 import PySimpleGUI as sg 
 from Game import Game
-#from Iseasons import Iseasons
+
 
 def win1():
-    lauer1 = [[sg.T('Сколько будет играть человек?'), sg.Combo(['2', '3', '4'], default_value='2', key='_PL_')], 
-                [sg.Button('Старт', key='_START_')]
-            ]
+    """Создает окно, которое запрашивает количество игроков"""
+    lauer1 = [
+              [
+                sg.T('Сколько будет играть человек?'), 
+                sg.Combo(  
+                         ['2', '3', '4'], 
+                         default_value='2', 
+                         key='_PL_'
+                         )
+              ], 
+                [sg.Button('Старт',
+                           key='_START_'
+                           )
+                 ]
+             ]
     w1 = sg.Window('Сезоны Начало', lauer1)
     while True:
         event, values = w1.read()
@@ -21,6 +32,7 @@ def win1():
     return num_gamers
 
 def win2(num_gamers):
+    """Создает окно. Принимает количество игроков, возвращает список имен игроков"""
     arr = []
     names_gamers = []
     for i in range(num_gamers):
@@ -39,25 +51,14 @@ def win2(num_gamers):
     return names_gamers
 
 def win3(names_gamers):
+    """Создает окно. Предлагает рассадку игроков"""
     s = ''
     for i in names_gamers:
         s += i.name + '\n'
     sg.popup(f'Сядьте в следующем порядке:\n{s}И начинайте спокойно играть.')
 
-def winroll(g, arr, v, w1, name):
-    g.roll_dices()
-    for i in range(len(arr)):
-        if v[f'{i}c'] == '':
-            tt=g.dices[i][1]
-            g.cal.time(tt)
-        arr[i][1].Update(filename=g.dices[i][0])
-        w1[f'{i}c'].update(values=name)
-    w1['data'].update(f'{g.cal.get_year()} год {g.id_season_to_season()}')
-    
-
 def win4(g):
-    """Косячный недоделанный метод"""
-    text_data = f'{g.cal.get_year()} год {g.id_season_to_season()}'
+    """Окно с циклом игры"""
     g.roll_dices()
     arr = []
     ev = []
@@ -65,25 +66,36 @@ def win4(g):
     for i in g.gamers:
         name.append([i.name])
     name.append('')
-    for i in range(g.num_dice_in_season):
+    for i in range(g.num_gamers+1):
         arr.append([
                     sg.Combo(name, default_value='', key=f'{i}c'), 
                     sg.Image(g.dices[i][0], key=i), 
                     sg.Button('Перебросить', key=f'{i}b')
                     ])
         ev.append(f'{i}b')
-    lauer1 = [[sg.Text(text_data, key='data')], [arr], [sg.Button('Бросок', key='_ROLL_')]]
+    lauer1 = [[sg.Text(g.text_time(), key='data')], 
+              [arr], 
+              [sg.Button('Бросок', key='_ROLL_')]]
     w1 = sg.Window('Сезоны', lauer1)
     while True:
         event, values = w1.read()
         if event in (None, 'Exit', 'Cancel'):
             break
         if event == '_ROLL_':
-            winroll(g, arr, values, w1, name)
+            #winroll(g, arr, values, w1, name)
+            for i in range(len(arr)):
+                if values[f'{i}c'] == '':
+                    g.time(g.dices[i][1])
+            g.roll_dices()
+            for i in range(len(arr)):
+                arr[i][1].Update(filename=g.dices[i][0])
+                w1[f'{i}c'].update(values=name)
+            w1['data'].update(g.text_time())
         if event in ev:
             g.roll_dices()
             j = int(event[:1])
             w1[j].update(filename=g.dices[j][0])
+            
     w1.close()
 
 num_gamers = win1()

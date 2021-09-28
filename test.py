@@ -5,9 +5,9 @@ from Game import Game
 class TestSum(unittest.TestCase):
 
     def test_list(self):
-        result = 1
-        etalon = 1
-        self.assertEqual(result, etalon)
+        result = Game.j()
+        etalon = "int"
+        self.assertEqual(type(result), etalon)
 
 if __name__ == "__main__":
     unitest.main()

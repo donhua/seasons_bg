@@ -8,7 +8,6 @@ class Game:
 
     def __init__(self, num_gamers: int, path_setting: str = 'settings.json', path_image: str = 'img'):
         self.num_gamers = num_gamers
-        self.num_dice_in_season = self.num_gamers + 1
         self.day = 1
         self.name_season = ["Зимы", "Весны", "Лета", "Осени"]
         self.p_settings = path_setting
@@ -25,6 +24,8 @@ class Game:
     def time(self, time):
         """Время. Изменяет количество дней"""
         self.day += time
+        if self.day <= 0:
+            self.day = 12 - self.day
 
     def get_year(self):
         """Время. Возвращает количество прошедших полных лет игры"""
@@ -38,13 +39,14 @@ class Game:
 
     def get_id_season(self):
         """Время. Возвращает ID сезона"""
-        day = self.get_day_in_year()
+        day = self.get_day_in_period(12)
         season_id = (day - 1)//3
         return season_id
 
     def text_time(self):
         """Время. Возвращает дату игры в текстовом формате"""
-        text = f'Идет {self.get_periodr(12)} год, {self.get_day_in_period(3)} месяц {self.name_season[self.get_id_season()]}'
+        text = f'Идет {self.get_day_in_periodr(12)} год, {self.get_day_in_period(3)} \
+            месяц {self.name_season[self.get_id_season()]}'
         return text
 
     def time_end(self):
