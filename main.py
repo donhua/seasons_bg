@@ -81,14 +81,13 @@ def win4(g):
         event, values = w1.read()
         if event in (None, 'Exit', 'Cancel'):
             break
-        if event == '_ROLL_':
-            if g.time_end() == True:
-                sg.popup('Закончился третий год. Конец игры.')
-                break
-            #winroll(g, arr, values, w1, name)
+        if event == '_ROLL_':    
             for i in range(len(arr)):
                 if values[f'{i}c'] == '':
                     g.time(g.dices[i][1])
+            if g.time_end() == True:
+                sg.popup('Закончился третий год. Конец игры.')
+                break
             g.roll_dices()
             for i in range(len(arr)):
                 arr[i][1].Update(filename=g.dices[i][0])
@@ -97,12 +96,15 @@ def win4(g):
         if event in ev:
             g.roll_dices()
             j = int(event[:1])
-            w1[j].update(filename=g.dices[j][0])
-            
+            w1[j].update(filename=g.dices[j][0])      
     w1.close()
 
-num_gamers = win1()
-g = Game(num_gamers)
-g.create_players(win2(num_gamers))
-win3(g.gamers)
-win4(g)
+def main():
+    num_gamers = win1()
+    g = Game(num_gamers)
+    g.create_players(win2(num_gamers))
+    win3(g.gamers)
+    win4(g)
+
+if __name__ == '__main__':
+    main()
