@@ -2,6 +2,7 @@
 from os import name
 import PySimpleGUI as sg 
 from Game import Game
+import time
 
 
 def win1():
@@ -75,13 +76,15 @@ def win4(g):
         ev.append(f'{i}b')
     lauer1 = [[sg.Text(g.text_time(), key='data')], 
               [arr], 
-              [sg.Button('Бросок', key='_ROLL_')]]
+              [sg.Button('Бросок', key='_ROLL_'), 
+               sg.Spin([-3, -2, -1, 0, 1, 2, 3], 0, key = 'spin'),
+               sg.Button('Время', key='_TIME_'),]]
     w1 = sg.Window('Сезоны', lauer1)
     while True:
         event, values = w1.read()
         if event in (None, 'Exit', 'Cancel'):
             break
-        if event == '_ROLL_':    
+        if event == '_ROLL_':
             for i in range(len(arr)):
                 if values[f'{i}c'] == '':
                     g.time(g.dices[i][1])
@@ -93,10 +96,15 @@ def win4(g):
                 arr[i][1].Update(filename=g.dices[i][0])
                 w1[f'{i}c'].update(values=name)
             w1['data'].update(g.text_time())
+            w1['spin'].update(0)
         if event in ev:
             g.roll_dices()
             j = int(event[:1])
-            w1[j].update(filename=g.dices[j][0])      
+            w1[j].update(filename=g.dices[j][0])
+        if event == '_TIME_':
+            g.time(values['spin'])
+            w1['data'].update(g.text_time())
+            w1['spin'].update(0)   
     w1.close()
 
 def main():
